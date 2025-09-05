@@ -6,23 +6,23 @@ from django.contrib.auth.models import User
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 # Create your views here.
-# List of notes
-class NoteListView(generics.ListAPIView):
+# List and create notes
+class NoteListView(generics.ListCreateAPIView):
     serializer_class = NoteSerializer
     queryset = Note.objects.all()
     permission_classes = [IsAuthenticated]  # Only authenticated users can access this view
+    
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)  # DRF already validates the serializer
 
-# List notes of the authenticated user      
-class UserNotesListView(generics.ListCreateAPIView):
+# List notes of the authenticated user
+class UserNotesListView(generics.ListAPIView):
     serializer_class = NoteSerializer
     permission_classes = [IsAuthenticated]  # Only authenticated users can access this view
 
     def get_queryset(self):
         user = self.request.user
         return Note.objects.filter(author=user)
-    
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)  # DRF already validates the serializer
         
 class NoteDeleteView(generics.DestroyAPIView):
     serializer_class = NoteSerializer
