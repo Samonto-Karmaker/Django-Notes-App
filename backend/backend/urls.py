@@ -25,4 +25,5 @@ urlpatterns = [
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),  # Endpoint for obtaining JWTs
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # Endpoint for refreshing JWTs
     path('api/auth/', include('rest_framework.urls')),  # Optional: DRF's login/logout views for the browsable API
+    path('api/', include('api.urls')),  # Include the URLs from the api app
 ]
